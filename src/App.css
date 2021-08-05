@@ -4,10 +4,12 @@
   border: 2px solid black;
   border-radius: 50%;
 }
-
-.indicator.on {
-  background-color: greenyellow;
+.on.indicator {
+  background-color: black;
+  height: 75px;
+  width: 75px;
 }
+
 .movement-ring.isInMotion {
   border: 1px solid red;
 }
@@ -32,17 +34,51 @@
 }
 
 .animation-container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: lightgreen;
   width: 100%;
-  height: 50vh;
-  grid-template-rows: repeat(5, 1fr);
+  height: 40vh;
+  justify-content: stretch;
 }
 
-.box {
-  grid-row: 5 / span 2;
+.isOpen.left {
+  right: -100vw;
+}
+.isOpen.right {
+  left: -100vw;
+}
+
+.clicker {
+  border: 2px solid red;
+  cursor: pointer;
+}
+.door-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.left,
+.right {
   background-color: teal;
+  width: 100%;
+  border: 5px solid blue;
   text-align: center;
+}
+.door {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.empty {
+  width: 100%;
+  height: 100%;
+  /* order: ; */
+  transition: all 0.05 ease-out;
+  text-align: center;
+  border: 5px solid red;
 }
 
 .call-button {
@@ -54,6 +90,5 @@
   text-align: center;
   font-size: 25px;
   cursor: pointer;
-  color: red;
   border: 2px solid red;
 }
