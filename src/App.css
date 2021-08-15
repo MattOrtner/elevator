@@ -1,15 +1,9 @@
-.indicator {
-  height: 50px;
-  width: 50px;
-  border: 2px solid black;
-  border-radius: 50%;
-}
-
-.indicator.on {
-  background-color: greenyellow;
-}
-.movement-ring.isInMotion {
-  border: 1px solid red;
+.title {
+  font-size: 50px;
+  background: -webkit-linear-gradient(45deg, #09009f, #00ff95 80%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .App {
@@ -20,7 +14,7 @@
   width: 100%;
 }
 
-.bottom-container {
+.all-call-container {
   width: 80%;
 }
 
@@ -30,30 +24,119 @@
   width: 100%;
   margin-bottom: 25px;
 }
-
-.animation-container {
-  display: grid;
-  background-color: lightgreen;
-  width: 100%;
-  height: 50vh;
-  grid-template-rows: repeat(5, 1fr);
+.elevator-panel {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
-.box {
-  grid-row: 5 / span 2;
+.panel-button {
+  height: 50px;
+  width: 75px;
+  /* border-radius: 50%; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid salmon;
+  background-color: darkslategrey;
+  color: white;
+  cursor: pointer;
+}
+.true.panel-button {
+  border: 2px solid red;
+  border-radius: 50%;
+}
+.elevator-animation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: lightgreen;
+  width: 50%;
+  height: 40vh;
+  justify-content: stretch;
+}
+
+.clicker {
+  border: 2px solid red;
+  cursor: pointer;
+}
+.bottom-container {
+  display: flex;
+  overflow: hidden;
+}
+.door-container {
+  width: 100%;
+  display: flex;
+}
+.left,
+.right {
   background-color: teal;
+  width: 100%;
+  border: 5px solid blue;
   text-align: center;
+  z-index: 1;
+  transition: all 3s ease-in;
+}
+.true.left {
+  transform: translateX(-100%);
+}
+
+.true.right {
+  transform: translateX(100%);
+}
+
+.safety-sensor-button {
+  cursor: pointer;
+  border: 10px inset silver;
+  height: 75px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.door {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.empty {
+  width: 100%;
+  height: 100%;
+  transition: all 0.05 ease-out;
+  text-align: center;
+  border: 5px solid red;
 }
 
 .call-button {
-  width: 100%;
   height: 100%;
   align-items: center;
   display: flex;
   justify-content: space-around;
   text-align: center;
   font-size: 25px;
-  cursor: pointer;
-  color: red;
   border: 2px solid red;
+}
+.floor-button {
+  cursor: pointer;
+  border: 2px solid red;
+}
+.true.floor-button {
+  border-radius: 50%;
+}
+.indicator {
+  height: 50px;
+  width: 50px;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+.true.indicator {
+  background: linear-gradient(
+    90deg,
+    rgb(249, 249, 249) 0%,
+    rgb(0, 248, 249) 35%,
+    rgb(255, 255, 0) 100%
+  );
 }
