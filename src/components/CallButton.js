@@ -1,24 +1,24 @@
 import React from "react";
 
 const CallButton = (props) => {
-  const { on, call, floor, setDownCallQue, setUpCallQue, isCalled } = props;
+  const { on, call, floor, isFloorCalled } = props;
 
   return (
     <div className={`call-button`}>
       <div>{floor}</div>
-      <div className="movement-ring">
+      <div className="location-ring">
         <div className={`${on} indicator`}></div>
       </div>
       <div
-        className={`${isCalled}`}
-        onClick={() => call(setUpCallQue, "up", floor)}
+        className={`${isFloorCalled} floor-button`}
+        onClick={() => call("up", floor)}
       >
         Up
       </div>
 
       <div
-        className={`${isCalled}`}
-        onClick={() => call(setDownCallQue, "down", floor)}
+        className={`${isFloorCalled} floor-button`}
+        onClick={() => call("down", floor)}
       >
         Down
       </div>

@@ -1,6 +1,7 @@
 import "./App.css";
-import CallButton from "/Users/mattortner/Documents/code/elevator/src/components/CallButton";
+import CallButton from "./components/CallButton";
 import { useState } from "react";
+import ElevatorPanelButton from "./components/ElevatorPanelButton";
 
 const INITIAL_STATE = [
   { floor: 0, on: true },
@@ -11,84 +12,95 @@ const INITIAL_STATE = [
 
 function App() {
   const [elevator, setElevator] = useState(INITIAL_STATE);
-  const [upCallQue, setUpCallQue] = useState([]);
-  const [downCallQue, setDownCallQue] = useState([]);
+  const [callQue, setCallQue] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(0);
-  const [isCalled, setIsCalled] = useState(false);
+  const [isFloorCalled, setIsFloorCalled] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [isPanelSelected, setIsPanelSelected] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [isOpen, setIsOpen] = useState(false);
-  /**
-   *
-   *
-   *
-   */
 
-  const call = (setQue, direction, floor) => {
-    if (direction === "up") {
-      if (!upCallQue.includes(floor)) {
-        setQue([...upCallQue, floor]);
-      }
-    } else if (direction === "down") {
-      if (!downCallQue.includes(floor)) {
-        setQue([...downCallQue, floor]);
-      }
+  const call = (direction, floor) => {
+    if (
+      callQue.some(
+        (call) => call.direction === direction && call.floor === floor
+      )
+    ) {
+      console.log("duplicate call");
     } else {
-      console.error("else statement of call...");
+      setCallQue([...callQue, { direction: direction, floor: floor }]);
+      // setIsCalled(true);
+      activateElevator(floor);
     }
-    setIsCalled(true);
-    activateElevator(floor);
   };
 
   const activateElevator = (floor) => {
-    console.log(typeof floor, "floor");
-    console.log(floor, "floor");
-    console.log(typeof currentPosition, "currentP");
-    console.log(currentPosition, "currentP");
-
-    switch (true) {
-      case currentPosition:
-        openDoor();
-        break;
-      case floor > currentPosition:
-        console.log("raising elevator");
-        raiseElevator();
-        break;
-      case floor < currentPosition:
-        console.log("lowering elevator");
-        lowerElevator();
-        break;
-      default:
-        console.log("elevator was not activated...");
-        console.log(floor, currentPosition);
-        break;
+    if (floor === currentPosition) {
+      openDoor();
+    } else if (floor > currentPosition) {
+      console.log("raising elevator");
+      raiseElevator();
+    } else if (floor < currentPosition) {
+      console.log("lowering elevator");
+      lowerElevator();
+    } else {
+      console.log("elevator was not activated...");
+      console.log(floor, currentPosition);
     }
-    // return activateElevator(floor);
+    console.log(`floor`, floor);
+    console.log(`currentPosition`, currentPosition);
+    // if (floor !== currentPosition) {
+    //   activateElevator(floor);
+    // }
   };
 
   const raiseElevator = (floor) => {
-    let newElevator = [
-      ...elevator,
-      (elevator[floor].on = false),
-      (elevator[floor + 1].on = true),
-    ];
-    setElevator(newElevator);
+    console.log(`elevator - raiseElevator`, elevator);
+    console.log(`floor - raiseElevator()`, floor);
     setCurrentPosition(currentPosition + 1);
   };
 
-  const lowerElevator = () => {
-    //
-  };
+  const lowerElevator = () => {};
 
   const openDoor = () => {
-    console.log("doorOpen");
+    console.log("door opening");
     setIsOpen(true);
+    setTimeout(() => {
+      closeDoor();
+    }, 4000);
   };
-  // const closeDoor = () => setIsOpen(false);
+
+  const closeDoor = () => {
+    console.log("closing door");
+    setIsOpen(false);
+    setTimeout(() => {
+      console.log("Door closed");
+    }, 3000);
+  };
 
   const safetySensorActivation = () => {
-    console.log("sensor activated");
-    openDoor();
+    if (isOpen) {
+      console.log(
+        "DANGER - safety sensor activated please watch for the closing door."
+      );
+      openDoor();
+    } else {
+      console.log("door is not open, why is this HAPPENING!!!");
+    }
   };
 
+  const panelCall = (floorNumber) => {
+    console.log(`elevator`, elevator);
+    setCallQue([...callQue, floorNumber]);
+  };
   // const endRide = () => {
   //   setIsCalled(false);
   //   closeDoor();
@@ -97,27 +109,48 @@ function App() {
   return (
     <div className="App">
       <h1 className="floor-indicator">{currentPosition}</h1>
-      <div className="bottom-container">
+      <h1 className="title">Elevators Are The Future</h1>
+      <div className="all-call-container">
         <div className="button-container">
           {elevator.map((floor, i) => (
             <CallButton
               on={floor.on}
               call={call}
               floor={floor.floor}
-              setUpCallQue={setUpCallQue}
-              setDownCallQue={setDownCallQue}
-              isCalled={isCalled}
               key={i}
+              isFloorCalled={isFloorCalled[i]}
+              setIsFloorCalled={setIsFloorCalled}
             />
           ))}
         </div>
-        <div className="animation-container" onClick={safetySensorActivation}>
-          <div className="empty 1">empty</div>
-          <div className="empty 2">empty</div>
-          <div className="empty 3">empty</div>
-          <div className="door-container">
-            <div className={`${isOpen} left`}>left</div>
-            <div className={`${isOpen} right`}>right</div>
+        <div className="bottom-container">
+          <div className="elevator-panel">
+            <div
+              className="safety-sensor-button"
+              onClick={safetySensorActivation}
+            >
+              Stick your leg in the door, so that it doesn't close? <br />
+              <br />
+              PRESS ME!
+            </div>
+            {elevator.map((floor, i) => (
+              <ElevatorPanelButton
+                floorNumber={floor.floor}
+                key={i}
+                panelCall={panelCall}
+                isPanelSelected={isPanelSelected}
+                setIsPanelSelected={setIsPanelSelected}
+              />
+            ))}
+          </div>
+          <div className="elevator-animation-container">
+            <div className="empty 1">empty</div>
+            <div className="empty 2">empty</div>
+            <div className="empty 3">empty</div>
+            <div className="door-container">
+              <div className={`${isOpen} left`}>left</div>
+              <div className={`${isOpen} right`}>right</div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,13 @@
+- the the sensor can't be tripped when the elevator doors are closing bc
+  the state thinks it's already closed... and says... what the fuck are we going
+- once the door closes, button state change.
+- when does the que change
+
 all calls go to one array
 filter by direction
 make stops along and pick up others of the same direction
 then handle, another call / direction
+
 [case] what happens when a call is made in the same direction, but is past the elevator
 
 - am i in motion
@@ -10,11 +16,7 @@ then handle, another call / direction
 - every floor needs to be passed on the way
   -- [side affects] - shows each floor it passes - makes a noise when it's arrived to the correct floor
 
-holdDoor() => setTimeOut( 3000ms, closeDoor())
-
 # safety concerns
-
-figure out how to make the elevator take x number of seconds to reach each floor
 
 ---
 
@@ -36,21 +38,3 @@ two different things are happening
 
 1. external calls
 2. internal calls
-
-# externalCallQue
-
-    callUp
-    callDown
-
-if the elevator is going in the direction of the button that os called...
-then those people get onto the elevator and everything is great...
-
-# internal
-
-( it knows the direction, all it thinks is up or dawn )
-
-    callQue
-
-keep making the things that make you happy ... we can figure it out if we really want to
-
-Curry the functions and it becomes more readable
