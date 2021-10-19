@@ -43,10 +43,10 @@
   justify-content: stretch;
 }
 
-.isOpen.left {
+.isOpen .left {
   right: -100vw;
 }
-.isOpen.right {
+.isOpen .right {
   left: -100vw;
 }
 
@@ -58,6 +58,7 @@
   width: 100%;
   display: flex;
   justify-content: space-around;
+  height: 100%;
 }
 .left,
 .right {
@@ -65,6 +66,7 @@
   width: 100%;
   border: 5px solid blue;
   text-align: center;
+  height: inherit;
 }
 .door {
   text-align: center;
@@ -78,7 +80,7 @@
   /* order: ; */
   transition: all 0.05 ease-out;
   text-align: center;
-  border: 5px solid red;
+  border: 1.5px solid black;
 }
 
 .call-button {

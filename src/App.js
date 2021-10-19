@@ -16,11 +16,6 @@ function App() {
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isCalled, setIsCalled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  /**
-   *
-   *
-   *
-   */
 
   const call = (setQue, direction, floor) => {
     if (direction === "up") {
@@ -35,17 +30,11 @@ function App() {
       console.error("else statement of call...");
     }
     setIsCalled(true);
-    activateElevator(floor);
   };
 
   const activateElevator = (floor) => {
-    console.log(typeof floor, "floor");
-    console.log(floor, "floor");
-    console.log(typeof currentPosition, "currentP");
-    console.log(currentPosition, "currentP");
-
-    switch (true) {
-      case currentPosition:
+    switch (floor) {
+      case floor === currentPosition:
         openDoor();
         break;
       case floor > currentPosition:
@@ -75,7 +64,7 @@ function App() {
   };
 
   const lowerElevator = () => {
-    //
+    console.log("lowering elevator");
   };
 
   const openDoor = () => {
@@ -89,10 +78,9 @@ function App() {
     openDoor();
   };
 
-  // const endRide = () => {
-  //   setIsCalled(false);
-  //   closeDoor();
-  // };
+  const endRide = () => {
+    console.log("ride ended");
+  };
 
   return (
     <div className="App">
