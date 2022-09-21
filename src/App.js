@@ -1,112 +1,144 @@
 import "./App.css";
-import CallButton from "/Users/mattortner/Documents/code/elevator/src/components/CallButton";
+// import OutsideCallButton from "./components/OutsideCallButton";
 import { useState } from "react";
-
-const INITIAL_STATE = [
-  { floor: 0, on: true },
-  { floor: 1, on: false },
-  { floor: 2, on: false },
-  { floor: 3, on: false },
-];
+import InsideCallButtonContainer from "./components/InsideCallButtonContainer";
+import OutsideCallButton from "./components/OutsideCallButton";
+import INITIAL_ElEVATOR_STATE from "./data/dummy-data";
 
 function App() {
-  const [elevator, setElevator] = useState(INITIAL_STATE);
-  const [upCallQue, setUpCallQue] = useState([]);
-  const [downCallQue, setDownCallQue] = useState([]);
-  const [currentPosition, setCurrentPosition] = useState(0);
+  const [elevator, setElevator] = useState(INITIAL_ElEVATOR_STATE);
   const [isCalled, setIsCalled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const call = (setQue, direction, floor) => {
-    if (direction === "up") {
-      if (!upCallQue.includes(floor)) {
-        setQue([...upCallQue, floor]);
-      }
-    } else if (direction === "down") {
-      if (!downCallQue.includes(floor)) {
-        setQue([...downCallQue, floor]);
-      }
+  const [currentFloor, setCurrentFloor] = useState(0);
+  const [currentDirection, setCurrentDirection] = useState("idle");
+  const [insideQue, setInsideQue] = useState([]);
+  const [upQue, setUpQue] = useState([]);
+  const [downQue, setDownQue] = useState([]);
+  const OUTSIDE_LIGHTS_INITIAL_STATE = [];
+  for (let i = 0; i < elevator.length; i += 1) {
+    if (i === 0 || i === elevator.length - 1) {
+      OUTSIDE_LIGHTS_INITIAL_STATE.push(false);
     } else {
-      console.error("else statement of call...");
+      OUTSIDE_LIGHTS_INITIAL_STATE.push([false, false]);
     }
-    setIsCalled(true);
+  }
+  const [
+    outsideDirectionalIndicatorLights,
+    setOutsideDirecionalIndicatorLights,
+  ] = useState(OUTSIDE_LIGHTS_INITIAL_STATE);
+  const INSIDE_LIGHTS_INITIAL_STATE = Array(elevator.length).fill(false);
+  const [insideIndicatorLights, setInsideIndicatorLights] = useState(
+    INSIDE_LIGHTS_INITIAL_STATE
+  );
+
+  const callFloor = (floorNum, direction) => {
+    // if the elevator is already called then just update the state of the elevator
+    if (isCalled) {
+      addFloorCall(floorNum, direction);
+      console.log(`elevator already called, updating elevator call state`);
+    } else {
+      // if the elevator is not called
+      setCurrentDirection(direction);
+      setIsCalled(true);
+      addFloorCall(floorNum, direction);
+      startElevator();
+      console.log("elevator first call");
+    }
   };
 
-  const activateElevator = (floor) => {
-    switch (floor) {
-      case floor === currentPosition:
-        openDoor();
+  const addFloorCall = (floorNum, direction) => {
+    switch (direction) {
+      case "up":
+        if (upQue.includes(floorNum)) return;
+        setUpQue((prevState) => [...prevState, floorNum]);
         break;
-      case floor > currentPosition:
-        console.log("raising elevator");
-        raiseElevator();
+      case "down":
+        if (downQue.includes(floorNum)) return;
+        setDownQue((prevState) => [...prevState, floorNum]);
         break;
-      case floor < currentPosition:
-        console.log("lowering elevator");
-        lowerElevator();
+      case "inside":
+        if (insideQue.includes(floorNum)) return;
+        setInsideQue((prevState) => [...prevState, floorNum]);
         break;
       default:
-        console.log("elevator was not activated...");
-        console.log(floor, currentPosition);
+        console.log("Add floor breakcase, what's wrong with the switch?!");
         break;
     }
-    // return activateElevator(floor);
   };
 
-  const raiseElevator = (floor) => {
-    let newElevator = [
-      ...elevator,
-      (elevator[floor].on = false),
-      (elevator[floor + 1].on = true),
-    ];
-    setElevator(newElevator);
-    setCurrentPosition(currentPosition + 1);
+  const moveOneFloorUp = () => {};
+  const moveOneFloorDown = () => {};
+  const removeCallFromQue = (que, currentFloor, setFunction) => {
+    const indexCurrentFloor = que.indexOf(currentFloor);
+    const newQue = [...que];
+    newQue.splice(indexCurrentFloor, 1);
+    setFunction(newQue);
   };
 
-  const lowerElevator = () => {
-    console.log("lowering elevator");
-  };
+  /**
+  while insideQue.length || outsideUp.length || outsideDown.length
+    is the elevator called on this floor in our direction?
+      open doors
+      close doors
+      is the elevator called on this floor from the inside?
+    is the elevator called on this floor from the inside?
+    go to the next floor in this direction
+  */
 
-  const openDoor = () => {
-    console.log("doorOpen");
-    setIsOpen(true);
-  };
-  // const closeDoor = () => setIsOpen(false);
-
-  const safetySensorActivation = () => {
-    console.log("sensor activated");
-    openDoor();
-  };
-
-  const endRide = () => {
-    console.log("ride ended");
+  const startElevator = () => {
+    while (upQue.length || downQue.length || insideQue.length) {
+      switch (currentDirection) {
+        case "up":
+          if (upQue.includes(currentFloor)) {
+            removeCallFromQue(upQue, currentFloor, setUpQue);
+            // open doors()
+            // close doors()
+            // await an internal call before contiueing ?
+            if (insideQue.includes(currentFloor)) {
+              removeCallFromQue(insideQue, currentFloor, setInsideQue);
+            }
+            setCurrentFloor((currentFloor) => currentFloor + 1);
+          } else if (insideQue.includes(currentFloor)) {
+            // open doors()
+            removeCallFromQue(insideQue, currentFloor, setInsideQue);
+            // close doors()
+          }
+          if (upQue.length === 0) setCurrentDirection("down");
+          break;
+        case "down":
+          if (downQue.includes(currentFloor)) {
+            removeCallFromQue(downQue, currentFloor, setUpQue);
+          }
+          setCurrentDirection("up");
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   return (
     <div className="App">
-      <h1 className="floor-indicator">{currentPosition}</h1>
+      <h1>{currentFloor}</h1>
       <div className="bottom-container">
-        <div className="button-container">
+        <div className="floor-button-container">
           {elevator.map((floor, i) => (
-            <CallButton
-              on={floor.on}
-              call={call}
-              floor={floor.floor}
-              setUpCallQue={setUpCallQue}
-              setDownCallQue={setDownCallQue}
-              isCalled={isCalled}
+            <OutsideCallButton
+              indicatorLights={outsideDirectionalIndicatorLights}
+              toggleIndicatorLight={setOutsideDirecionalIndicatorLights}
+              callFloor={callFloor}
+              floorNumber={floor}
               key={i}
+              elevatorLength={elevator.length - 1}
             />
           ))}
         </div>
-        <div className="animation-container" onClick={safetySensorActivation}>
-          <div className="empty 1">empty</div>
-          <div className="empty 2">empty</div>
-          <div className="empty 3">empty</div>
-          <div className="door-container">
-            <div className={`${isOpen} left`}>left</div>
-            <div className={`${isOpen} right`}>right</div>
-          </div>
+        <div className="inside-call-container">
+          <InsideCallButtonContainer
+            callFloor={callFloor}
+            elevator={elevator}
+            indicatorLights={insideIndicatorLights}
+            toggleIndicatorLight={setInsideIndicatorLights}
+          />
         </div>
       </div>
     </div>

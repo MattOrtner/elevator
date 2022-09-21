@@ -4,14 +4,9 @@
   border: 2px solid black;
   border-radius: 50%;
 }
-.on.indicator {
-  background-color: black;
-  height: 75px;
-  width: 75px;
-}
 
-.movement-ring.isInMotion {
-  border: 1px solid red;
+.true.indicator {
+  background-color: black;
 }
 
 .App {
@@ -20,17 +15,13 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100vh;
 }
 
 .bottom-container {
-  width: 80%;
-}
-
-.button-container {
   display: flex;
-  flex-direction: column-reverse;
-  width: 100%;
-  margin-bottom: 25px;
+  width: 80%;
+  justify-content: center;
 }
 
 .animation-container {
@@ -83,14 +74,50 @@
   border: 1.5px solid black;
 }
 
-.call-button {
-  width: 100%;
-  height: 100%;
-  align-items: center;
+.floor-button-container {
   display: flex;
+  flex-direction: column-reverse;
+}
+.outside-call-button-container {
+  display: flex;
+  flex: 1;
+  align-items: center;
   justify-content: space-around;
   text-align: center;
   font-size: 25px;
   cursor: pointer;
   border: 2px solid red;
+}
+.up-and-down-outside-container {
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+}
+.up-and-down-indicator-container {
+  padding-top: 4px;
+}
+.directional-button {
+  display: flex;
+  flex: 1;
+  padding-left: 10px;
+  height: 60px;
+  width: 60px;
+}
+.single-button-container {
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-content: center;
+}
+.inside-call-button {
+  font: 30px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  cursor: pointer;
 }
